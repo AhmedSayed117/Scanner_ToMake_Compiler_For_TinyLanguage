@@ -67,7 +67,6 @@ struct InFile
         {
             SkipSpaces();
             while(cur_ind>=cur_line_size) {if(!GetNewLine()) return false; SkipSpaces();}
-
             if(StartsWith(&line_buf[cur_ind], str))
             {
                 cur_ind+=strlen(str);
@@ -136,6 +135,9 @@ struct CompilerInfo
 };
 ////////////////////////////////////////////////////////////////////////////////////
 // Scanner /////////////////////////////////////////////////////////////////////////
+InFile inFile("input.txt");
+OutFile outFile("output.txt");
+
 
 #define MAX_TOKEN_LEN 40
 enum TokenType{
@@ -230,8 +232,6 @@ inline bool IsDigit(char ch){return (ch>='0' && ch<='9');}
 inline bool IsLetter(char ch){return ((ch>='a' && ch<='z') || (ch>='A' && ch<='Z'));}
 inline bool IsLetterOrUnderscore(char ch){return (IsLetter(ch) || ch=='_');}
 
-InFile inFile("input.txt");
-OutFile outFile("output.txt");
 
 
 void writeonfile(const string& str,const string& Token){
@@ -342,8 +342,16 @@ void validateid(const string& str){//Num ID
         }
     }
 }
+bool error(char c,char c2){
+    if ((c!=' ' && (!IsLetterOrUnderscore(c) && !IsDigit(c))) && ( c!='>' && c!=';' && c!='<' && c!='=' && c!='^' && c!='/' && c!='*'&& c!='-'&& c!='+')){
+        if (c==':' && c2=='=')return false;
+        writeonfile(TokenTypeString[reserved_words[8].type],reserved_words[8].str);//error
+        return true;
+    }
+    return false;
+}
 
-void analysis(const string& str)
+void analysis(string str)
 {
     string tmp="";
     bool isRead = false;
@@ -351,16 +359,32 @@ void analysis(const string& str)
     bool isWrite = false;
     bool isAssign = false;
     bool isUntil = false;
-    for (int i=0;i<str.size();i++) {
+
+    cout<<str.size()-2<<endl;
+    for (int i=0;i<=str.size()-2;i++) {
         //not contain spaces
         if (str[i]!=' ') tmp+=str[i];
         else continue;
 
         //comment
         if (str[i]=='{'){
+            writeonfile(TokenTypeString[17],TokenTypeStr[17]);
             inFile.SkipUpto("}");
+            writeonfile(TokenTypeString[18],TokenTypeStr[18]);
             tmp="";
             break;
+        }
+        if (tmp.find('(')!=string::npos){
+//            auto it = tmp.find('(');
+//            tmp.erase(it);
+//            writeonfile(TokenTypeString[19],TokenTypeStr[19]);
+            continue;
+        }
+        if (tmp.find(')')!=string::npos){
+//            auto it = tmp.find(')');
+//            tmp.erase(it);
+//            writeonfile(TokenTypeString[20],TokenTypeStr[20]);
+            continue;
         }
 
         //if condition
@@ -487,6 +511,10 @@ void analysis(const string& str)
             tmp="";
             continue;
         }
+        //error
+//        if (i>0 && str[i-1]==' ' && str[i+1]==' ' && error(str[i],str[i+1])){
+//
+//        }
     }
     cout<<str;
 }
@@ -495,5 +523,6 @@ int main(){
     while (inFile.GetNewLine()){
         analysis(inFile.GetNextTokenStr());
     }
+    writeonfile(TokenTypeString[23],TokenTypeStr[23]);
     return 0;
 }
