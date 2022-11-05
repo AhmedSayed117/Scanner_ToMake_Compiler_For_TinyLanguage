@@ -64,4 +64,6 @@
 [14] { (LeftBrace)
 [14] } (RightBrace)
 [15] end (End)
+[15] & (Error)
+[15] d (ID)
 [15] EndFile (EndFile)

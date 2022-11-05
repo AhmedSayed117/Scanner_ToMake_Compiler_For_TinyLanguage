@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "A:/4 first term/COMPILERS/Assignments/Assignment 1/cmake-build-debug",
-		"source" : "A:/4 first term/COMPILERS/Assignments/Assignment 1"
+		"build" : "A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage/cmake-build-debug",
+		"source" : "A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage"
 	},
 	"version" : 
 	{

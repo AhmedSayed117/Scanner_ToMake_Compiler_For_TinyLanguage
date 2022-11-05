@@ -1,4 +1,4 @@
-# Install script for directory: A:/4 first term/COMPILERS/Assignments/Assignment 1
+# Install script for directory: A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "A:/4 first term/COMPILERS/Assignments/Assignment 1/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

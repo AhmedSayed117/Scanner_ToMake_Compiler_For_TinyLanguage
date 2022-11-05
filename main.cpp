@@ -317,6 +317,7 @@ bool error(char c){
 void ConstructTokens(string str)
 {
     string tmp;
+
     bool isRead = false,isIf = false,isWrite = false,isAssign = false,isUntil = false;
 
     for (int i=0;i<=str.size()-2;i++)
@@ -478,6 +479,9 @@ void ConstructTokens(string str)
             tmp="";
             continue;
         }
+    }
+    if (!tmp.empty()){
+        CheckIdOrNum(tmp);
     }
 }
 

@@ -11,5 +11,5 @@ if 0c<=x2s then {compute only if x>=1}
     fact := fact * + / ^ - x2s;
     x:=x-1s;
   until x==0;
-  write fac$t; {output factorial}
-end
+  write fact$; {output factorial}
+end d&

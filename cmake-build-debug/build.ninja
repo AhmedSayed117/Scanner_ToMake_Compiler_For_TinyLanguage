@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = A$:/4$ first$ term/COMPILERS/Assignments/Assignment$ 1/cmake-build-debug/
+cmake_ninja_workdir = A$:/4$ first$ term/COMPILERS/Assignments/Assignment$ 1/Scanner_ToMake_Compiler_For_TinyLanguage/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target Assignment_1
 
@@ -49,7 +49,7 @@ cmake_ninja_workdir = A$:/4$ first$ term/COMPILERS/Assignments/Assignment$ 1/cma
 
 build cmake_object_order_depends_target_Assignment_1: phony || CMakeFiles/Assignment_1.dir
 
-build CMakeFiles/Assignment_1.dir/main.cpp.obj: CXX_COMPILER__Assignment_1_Debug A$:/4$ first$ term/COMPILERS/Assignments/Assignment$ 1/main.cpp || cmake_object_order_depends_target_Assignment_1
+build CMakeFiles/Assignment_1.dir/main.cpp.obj: CXX_COMPILER__Assignment_1_Debug A$:/4$ first$ term/COMPILERS/Assignments/Assignment$ 1/Scanner_ToMake_Compiler_For_TinyLanguage/main.cpp || cmake_object_order_depends_target_Assignment_1
   DEP_FILE = CMakeFiles\Assignment_1.dir\main.cpp.obj.d
   FLAGS = -g -std=gnu++14
   OBJECT_DIR = CMakeFiles\Assignment_1.dir
@@ -81,7 +81,7 @@ build Assignment_1.exe: CXX_EXECUTABLE_LINKER__Assignment_1_Debug CMakeFiles/Ass
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "A:\4 first term\COMPILERS\Assignments\Assignment 1\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.1.1\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D "A:\4 first term\COMPILERS\Assignments\Assignment 1\Scanner_ToMake_Compiler_For_TinyLanguage\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.1.1\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -92,7 +92,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "A:\4 first term\COMPILERS\Assignments\Assignment 1\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.1.1\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"A:\4 first term\COMPILERS\Assignments\Assignment 1" -B"A:\4 first term\COMPILERS\Assignments\Assignment 1\cmake-build-debug""
+  COMMAND = cmd.exe /C "cd /D "A:\4 first term\COMPILERS\Assignments\Assignment 1\Scanner_ToMake_Compiler_For_TinyLanguage\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.1.1\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"A:\4 first term\COMPILERS\Assignments\Assignment 1\Scanner_ToMake_Compiler_For_TinyLanguage" -B"A:\4 first term\COMPILERS\Assignments\Assignment 1\Scanner_ToMake_Compiler_For_TinyLanguage\cmake-build-debug""
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -110,7 +110,7 @@ build Assignment_1: phony Assignment_1.exe
 # =============================================================================
 
 #############################################
-# Folder: A:/4 first term/COMPILERS/Assignments/Assignment 1/cmake-build-debug
+# Folder: A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage/cmake-build-debug
 
 build all: phony Assignment_1.exe
 

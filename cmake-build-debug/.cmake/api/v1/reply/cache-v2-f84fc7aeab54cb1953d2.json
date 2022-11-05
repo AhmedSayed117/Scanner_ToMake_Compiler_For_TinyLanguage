@@ -11,7 +11,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "A:/4 first term/COMPILERS/Assignments/Assignment 1/cmake-build-debug"
+			"value" : "A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage/cmake-build-debug"
 		},
 		{
 			"name" : "Assignment_1_IS_TOP_LEVEL",
@@ -35,7 +35,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "A:/4 first term/COMPILERS/Assignments/Assignment 1"
+			"value" : "A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage"
 		},
 		{
 			"name" : "CMAKE_ADDR2LINE",
@@ -91,7 +91,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "a:/4 first term/COMPILERS/Assignments/Assignment 1/cmake-build-debug"
+			"value" : "a:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -659,7 +659,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "A:/4 first term/COMPILERS/Assignments/Assignment 1"
+			"value" : "A:/4 first term/COMPILERS/Assignments/Assignment 1/Scanner_ToMake_Compiler_For_TinyLanguage"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
