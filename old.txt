@@ -1,0 +1,115 @@
+void ConstructTokens(const string& str)
+{
+    string tmp = "";
+
+    for (int i=0;i<str.size()-1;i++){
+        tmp+=str[i];
+
+        if (str[i]=='{'){
+            inFile.SkipUpto("}");
+            tmp="";
+            break;
+        }
+
+        if (str[i]==';')
+        {
+            writeonfile(TokenTypeString[reserved_words[9].type],reserved_words[9].str);
+            continue;
+        }
+
+        if (str[i]=='r' && str[i+1]=='e'&& str[i+2]=='p'&& str[i+3]=='e'&& str[i+4]=='a'&& str[i+5]=='t'){
+            writeonfile(TokenTypeString[reserved_words[4].type],reserved_words[4].str);
+            tmp="";
+            break;
+        }
+
+        if (str[i]=='r' && str[i+1]=='e'&& str[i+2]=='a'&& str[i+3]=='d'){
+            i+=5;
+            writeonfile(TokenTypeString[reserved_words[6].type],reserved_words[6].str);
+            tmp="";
+
+            while (str[i]!=';'){
+                tmp+=str[i++];
+            }
+            i--;
+            int size = tmp.size();
+            while (size--){
+                if (!IsLetterOrUnderscore(tmp[size])){
+                    writeonfile(TokenTypeString[reserved_words[8].type],reserved_words[8].str);//error
+                    exit(0);
+                }
+            }
+            writeonfile(tmp,TokenTypeString[21]);//ID
+            tmp="";
+            continue;
+        }
+
+        if(tmp == "if"){
+            i+=2;
+            tmp="";
+            writeonfile(TokenTypeString[reserved_words[0].type],reserved_words[0].str);
+
+            while(str[i]!='<' && str[i]!='>')
+            {
+                tmp+=str[i++];
+            }
+            int size = tmp.size();
+            while (size--){
+                if (!IsDigit(tmp[size])){
+                    writeonfile(TokenTypeString[reserved_words[8].type],reserved_words[8].str);//error
+                    exit(0);
+                }
+            }
+            writeonfile(tmp,reserved_words[10].str);//num
+            tmp="";
+
+            cout<<"here :"<<str[i]<<endl;
+            if (str[i]=='<'){
+                WriteOnFile(TokenTypeString[symbolic_tokens[2].type],symbolic_tokens[2].str);
+            }
+            if(str[i+1]=='='){
+                writeonfile(TokenTypeString[symbolic_tokens[1].type],symbolic_tokens[1].str);
+            }else{
+                i++;
+                while(str[i]!=' ')
+                {
+                    tmp+=str[i++];
+                }
+                writeonfile(tmp,TokenTypeString[21]);
+            }
+            i--;
+            tmp="";
+            continue;
+        }
+
+        if(str[i]==':' && str[i+1]=='='){
+            writeonfile(tmp.erase(i),TokenTypeString[21]);//ID
+            writeonfile(TokenTypeString[8],TokenTypeStr[8]);//assignment
+            i+=2;
+            tmp="";
+
+            while (str[i]!=';'){
+                tmp+=str[i++];
+            }
+            writeonfile(tmp,reserved_words[10].str);//num
+            tmp="";
+            i--;
+            continue;
+        }
+
+        if (str[i]=='w' && str[i+1]=='r' && str[i+2]=='i' && str[i+3]=='t'  && str[i+4]=='e'){
+            writeonfile(TokenTypeString[reserved_words[7].type],reserved_words[7].str);
+            i+=6;
+            tmp="";
+            while (str[i]!=';'){
+                tmp+=str[i++];
+            }
+            writeonfile(tmp,TokenTypeString[21]);//ID
+            tmp="";
+            i--;
+            continue;
+        }
+    }
+
+    cout<<str;
+}

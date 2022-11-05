@@ -1,7 +1,10 @@
 #include "bits/stdc++.h"
 #include "iostream"
+#define MAX_LINE_LENGTH 10000
+#define MAX_TOKEN_LEN 40
+
 using namespace std;
-#define endl "\n"
+
 // Strings /////////////////////////////////////////////////////////////////////////
 bool StartsWith(const char* a, const char* b)
 {
@@ -15,11 +18,7 @@ void Copy(char* a, const char* b, int n=0)
     else strcpy(a, b);
 }
 
-////////////////////////////////////////////////////////////////////////////////////
 // Input and Output ////////////////////////////////////////////////////////////////
-
-#define MAX_LINE_LENGTH 10000
-
 struct InFile
 {
     FILE* file;
@@ -104,9 +103,7 @@ struct OutFile
     }
 };
 
-////////////////////////////////////////////////////////////////////////////////////
 // Compiler Parameters /////////////////////////////////////////////////////////////
-
 struct CompilerInfo
 {
     InFile in_file;
@@ -118,13 +115,8 @@ struct CompilerInfo
     {
     }
 };
-////////////////////////////////////////////////////////////////////////////////////
+
 // Scanner /////////////////////////////////////////////////////////////////////////
-InFile inFile("input.txt");
-OutFile outFile("output.txt");
-
-
-#define MAX_TOKEN_LEN 40
 enum TokenType{
             IF, THEN, ELSE, END, REPEAT, UNTIL, READ, WRITE,
             ASSIGN, EQUAL, LESS_THAN,
@@ -177,7 +169,6 @@ const Token reserved_words[]=
         Token(READ, "read"),
         Token(WRITE, "write")
 };
-const int num_reserved_words=sizeof(reserved_words)/sizeof(reserved_words[0]);
 
 // if there is tokens like < <=, sort them such that sub-tokens come last: <= <
 // the closing comment should come immediately after opening comment
@@ -197,73 +188,65 @@ const Token symbolic_tokens[]=
         Token(LEFT_BRACE, "{"),
         Token(RIGHT_BRACE, "}")
 };
-const int num_symbolic_tokens=sizeof(symbolic_tokens)/sizeof(symbolic_tokens[0]);
 
 inline bool IsDigit(char ch){return (ch>='0' && ch<='9');}
 inline bool IsLetter(char ch){return ((ch>='a' && ch<='z') || (ch>='A' && ch<='Z'));}
 inline bool IsLetterOrUnderscore(char ch){return (IsLetter(ch) || ch=='_');}
 
+CompilerInfo compiler("input.txt","output.txt","debug.txt");
 
-
-void writeonfile(const string& str,const string& Token){
+void WriteOnFile(const string& str, const string& Token){
     char *pr = new char [100];
 
-    string s = "[";s+= to_string(inFile.cur_line_num);s+="] ";
+    string s = "[";s+= to_string(compiler.in_file.cur_line_num);s+="] ";
     s+=str;s+=" ";s+="(" ;s+=Token;s+=")";
 
     Copy(pr, s.c_str());
-    outFile.Out(pr);
+    compiler.out_file.Out(pr);
     delete[] pr;
 }
 
 void checkAssignmentOperator(deque<char>&d){
     if (d.front()=='<'){
-        writeonfile(symbolic_tokens[2].str,TokenTypeStr[symbolic_tokens[2].type]);
+        WriteOnFile(symbolic_tokens[2].str, TokenTypeStr[symbolic_tokens[2].type]);
         d.pop_front();
     }
     else if (d.front()=='='){
-        writeonfile(symbolic_tokens[1].str,TokenTypeStr[symbolic_tokens[1].type]);
+        WriteOnFile(symbolic_tokens[1].str, TokenTypeStr[symbolic_tokens[1].type]);
         d.pop_front();
     }
     else if (d.front()=='*'){
-        writeonfile(symbolic_tokens[5].str,TokenTypeStr[symbolic_tokens[5].type]);
+        WriteOnFile(symbolic_tokens[5].str, TokenTypeStr[symbolic_tokens[5].type]);
         d.pop_front();
     }
     else if (d.front()=='-'){
-        writeonfile(symbolic_tokens[4].str,TokenTypeStr[symbolic_tokens[4].type]);
+        WriteOnFile(symbolic_tokens[4].str, TokenTypeStr[symbolic_tokens[4].type]);
         d.pop_front();
     }else if (d.front()=='+'){
-        writeonfile(symbolic_tokens[3].str,TokenTypeStr[symbolic_tokens[3].type]);
+        WriteOnFile(symbolic_tokens[3].str, TokenTypeStr[symbolic_tokens[3].type]);
         d.pop_front();
     }else if (d.front()=='/'){
-        writeonfile(symbolic_tokens[6].str ,TokenTypeStr[symbolic_tokens[6].type]);
+        WriteOnFile(symbolic_tokens[6].str, TokenTypeStr[symbolic_tokens[6].type]);
         d.pop_front();
     }else if (d.front()=='^'){
-        writeonfile(symbolic_tokens[7].str,TokenTypeStr[symbolic_tokens[7].type]);
+        WriteOnFile(symbolic_tokens[7].str, TokenTypeStr[symbolic_tokens[7].type]);
         d.pop_front();
     }
 }//+ * - / ^ < > =
 
-void validateid(const string& str){//Num ID
+void CheckIdOrNum(const string& str){//Num ID
     string letter,number;
-
     deque<char>d;
+
     for (auto i:str) {
-        if (i!=' ' && (IsDigit(i) || IsLetterOrUnderscore(i)))d.push_back(i);
-        if (i=='<' )d.push_back(i);
-        else if (i=='>' )d.push_back(i);
-        else if (i=='=' )d.push_back(i);
-        else if (i=='*' )d.push_back(i);
-        else if (i=='-' )d.push_back(i);
-        else if (i=='+' )d.push_back(i);
-        else if (i=='/' )d.push_back(i);
-        else if (i=='^' )d.push_back(i);
+        if (i!=' ')d.push_back(i);
      }
+
     let:
     while (!d.empty()){
         if((d.front()=='>' || d.front()=='<' || d.front()=='=' || d.front()=='^' || d.front()=='/' || d.front()=='*'|| d.front()=='-'|| d.front()=='+')){
             if (!letter.empty()){
-                writeonfile(letter,TokenTypeStr[ID]);//ID
+                WriteOnFile(letter, TokenTypeStr[ID]);//ID
                 letter="";
             }
             checkAssignmentOperator(d);
@@ -273,15 +256,19 @@ void validateid(const string& str){//Num ID
         if (IsLetterOrUnderscore(d.front())){
             letter+=d.front();
             d.pop_front();
-        }else{
+        }
+
+        else{
             if (!letter.empty()){
-                writeonfile(letter,TokenTypeStr[ID]);//ID
+                WriteOnFile(letter, TokenTypeStr[ID]);//ID
                 letter="";
             }
             goto num;
         }
+
         if (d.empty()){
-            writeonfile(letter,TokenTypeStr[ID]);//ID
+            if (!letter.empty())
+                WriteOnFile(letter, TokenTypeStr[ID]);//ID
             letter="";
         }
     }
@@ -289,7 +276,7 @@ void validateid(const string& str){//Num ID
     while (!d.empty()){
         if((d.front()=='>' || d.front()=='<' || d.front()=='=' || d.front()=='^' || d.front()=='/' || d.front()=='*'|| d.front()=='-'|| d.front()=='+')){
             if (!number.empty()){
-                writeonfile(number,TokenTypeStr[NUM]);//number
+                WriteOnFile(number, TokenTypeStr[NUM]);//number
                 number="";
             }
             checkAssignmentOperator(d);
@@ -299,99 +286,114 @@ void validateid(const string& str){//Num ID
         if (IsDigit(d.front())){
             number+=d.front();
             d.pop_front();
-        }else{
+        }
+
+        else{
             if (!number.empty()){
-                writeonfile(number,TokenTypeStr[NUM]);//number
+                WriteOnFile(number, TokenTypeStr[NUM]);//number
                 number="";
             }
             goto let;
         }
+
         if (d.empty()){
-            writeonfile(number,TokenTypeStr[NUM]);//number
+            if (!number.empty())
+                WriteOnFile(number, TokenTypeStr[NUM]);//number
             number="";
             goto let;
         }
     }
 }
-bool error(char c,char c2){
-    if ((c!=' ' && (!IsLetterOrUnderscore(c) && !IsDigit(c))) && ( c!='>' && c!=';' && c!='<' && c!='=' && c!='^' && c!='/' && c!='*'&& c!='-'&& c!='+')){
-        if (c==':' && c2=='=')return false;
-        writeonfile(to_string(c),TokenTypeStr[ERROR]);//error
+
+bool error(char c){
+    if ((c!=' ' && (!IsLetterOrUnderscore(c) && !IsDigit(c))) && ( c!='{' && c!='}' &&c!='(' && c!=')'  && c!='>' && c!=';' && c!='<' && c!='=' && c!='^' && c!='/' && c!='*'&& c!='-'&& c!='+')){
+        string s;s+=c;
+        WriteOnFile(s, TokenTypeStr[ERROR]);//error
         return true;
     }
     return false;
 }
 
-void analysis(string str)
+void ConstructTokens(string str)
 {
     string tmp;
-    bool isRead = false;
-    bool isIf = false;
-    bool isWrite = false;
-    bool isAssign = false;
-    bool isUntil = false;
+    bool isRead = false,isIf = false,isWrite = false,isAssign = false,isUntil = false;
 
-    cout<<str.size()-2<<endl;
-    for (int i=0;i<=str.size()-2;i++) {
-        //not contain spaces
-        if (str[i]!=' ') tmp+=str[i];
+    for (int i=0;i<=str.size()-2;i++)
+    {
+        //not contain spaces and validate Error
+        if (str[i]!=' ')
+        {
+            if ((str[i]==':' && str[i+1]=='=')){
+                //do nothing
+            }
+            else{
+                if (error(str[i])){
+                    continue;
+                }
+            }
+            tmp+=str[i];
+        }
         else continue;
 
-        //comment
+        //check comment found
         if (str[i]=='{'){
-            writeonfile(symbolic_tokens[11].str,TokenTypeStr[symbolic_tokens[11].type]);
-            inFile.SkipUpto("}");
-            writeonfile(symbolic_tokens[12].str,TokenTypeStr[symbolic_tokens[12].type]);
+            WriteOnFile(symbolic_tokens[11].str, TokenTypeStr[symbolic_tokens[11].type]);//{
+            compiler.in_file.SkipUpto("}");
+
+            WriteOnFile(symbolic_tokens[12].str, TokenTypeStr[symbolic_tokens[12].type]);//}
             tmp="";
             break;
         }
+
         if (str[i]=='('){
-            str[i]=' ';
-            writeonfile(symbolic_tokens[9].str,TokenTypeStr[symbolic_tokens[9].type]);
-            continue;
-        }if (str[i]==')'){
-            str[i]=' ';
-            writeonfile(symbolic_tokens[10].str,TokenTypeStr[symbolic_tokens[10].type]);
+            tmp.erase(tmp.size()-1);
+            WriteOnFile(symbolic_tokens[9].str, TokenTypeStr[symbolic_tokens[9].type]);//(
             continue;
         }
+
+        if (str[i]==')'){
+            tmp.erase(tmp.size()-1);
+            WriteOnFile(symbolic_tokens[10].str, TokenTypeStr[symbolic_tokens[10].type]);
+            continue;
+        }
+
         //if condition
         if (tmp=="if" && ((str[i+1]==' ') || (!IsDigit(str[i+1]) && !IsLetterOrUnderscore(str[i+1]))  )    ){
-            writeonfile(reserved_words[0].str,TokenTypeStr[reserved_words[0].type]);
+            WriteOnFile(reserved_words[0].str, TokenTypeStr[reserved_words[0].type]);
             tmp="";
             isIf = true;
             continue;
         }
-        //
+
         //after x
         if (isIf && !tmp.empty() && str[i+1]!=' '){
             continue;
         }
 
         if (isIf && !tmp.empty()){
+            CheckIdOrNum(tmp);
+            tmp="";
             isIf= false;
-
-            validateid(tmp);
-
-            tmp="";
             continue;
         }
+
         if (tmp=="then"){
-            writeonfile(reserved_words[1].str,TokenTypeStr[reserved_words[1].type]);//then
+            WriteOnFile(reserved_words[1].str, TokenTypeStr[reserved_words[1].type]);//then
             tmp="";
             continue;
         }
+
         if (tmp=="until"){
-            writeonfile(reserved_words[5].str,TokenTypeStr[reserved_words[5].type]);//until
+            WriteOnFile(reserved_words[5].str, TokenTypeStr[reserved_words[5].type]);//until
             tmp="";
             isUntil= true;
             continue;
         }
+
         if (isUntil && tmp.find(';')!=string::npos){
-
-            validateid(tmp.erase(tmp.size()-1));
-
-            writeonfile(symbolic_tokens[8].str,TokenTypeStr[symbolic_tokens[8].type]);//;
-
+            CheckIdOrNum(tmp.erase(tmp.size() - 1));
+            WriteOnFile(symbolic_tokens[8].str, TokenTypeStr[symbolic_tokens[8].type]);//;
             tmp="";
             isUntil= false;
             continue;
@@ -399,97 +401,89 @@ void analysis(string str)
 
         //read input
         if (tmp=="read" && ((str[i+1]==' ') || (!IsDigit(str[i+1]) && !IsLetterOrUnderscore(str[i+1]))  )  ){
-            writeonfile(reserved_words[6].str,TokenTypeStr[reserved_words[6].type]);//read
+            WriteOnFile(reserved_words[6].str, TokenTypeStr[reserved_words[6].type]);//read
             tmp="";
             isRead = true;
             continue;
         }
-        //validate id
 
+        //validate id
         if (isRead && !tmp.empty() && tmp.find(';')==string::npos){
             continue;
         }
+
         //id
-
         if (isRead && !tmp.empty() && tmp.find(';')!=string::npos){
+            CheckIdOrNum(tmp.erase(tmp.size() - 1));
+            WriteOnFile(symbolic_tokens[8].str, TokenTypeStr[symbolic_tokens[8].type]);//;
             isRead= false;
-
-            validateid(tmp.erase(tmp.size()-1));
-
-            //semi column
-            writeonfile(symbolic_tokens[8].str,TokenTypeStr[symbolic_tokens[8].type]);//;
             tmp="";
             continue;
         }
 
         //write file
         if (tmp=="write" && ((str[i+1]==' ') || (!IsDigit(str[i+1]) && !IsLetterOrUnderscore(str[i+1]))  )  ){
-            writeonfile(reserved_words[7].str,TokenTypeStr[reserved_words[7].type]);//write
+            WriteOnFile(reserved_words[7].str, TokenTypeStr[reserved_words[7].type]);//write
             tmp="";
             isWrite= true;
             continue;
         }
 
         if (tmp=="repeat" && ((str[i+1]==' ') || (!IsDigit(str[i+1]) && !IsLetterOrUnderscore(str[i+1]))  )  ){
-            writeonfile(reserved_words[4].str,TokenTypeStr[reserved_words[4].type]);//repeat
+            WriteOnFile(reserved_words[4].str, TokenTypeStr[reserved_words[4].type]);//repeat
             tmp="";
             continue;
         }
 
         //semi column
         if (tmp==";"){
-            writeonfile(symbolic_tokens[8].str,TokenTypeStr[symbolic_tokens[8].type]);//;
+            WriteOnFile(symbolic_tokens[8].str, TokenTypeStr[symbolic_tokens[8].type]);//;
             tmp="";
             continue;
         }
 
         if(tmp.find(":=")!=string::npos){
-            writeonfile(tmp.erase(tmp.size()-2),TokenTypeStr[21]);//ID
-
-            writeonfile(symbolic_tokens[0].str,TokenTypeStr[symbolic_tokens[0].type]);//assignment
+            WriteOnFile(tmp.erase(tmp.size() - 2), TokenTypeStr[21]);//ID
+            WriteOnFile(symbolic_tokens[0].str, TokenTypeStr[symbolic_tokens[0].type]);//assignment
             isAssign= true;
             tmp="";
             continue;
         }
 
         if (isWrite && tmp.find(';')!=string::npos){
-            validateid(tmp.erase(tmp.size()-1));
-            tmp="";
+            CheckIdOrNum(tmp.erase(tmp.size() - 1));
+            WriteOnFile(symbolic_tokens[8].str, TokenTypeStr[symbolic_tokens[8].type]);//;
             isWrite= false;
-
-            //semi column
-            writeonfile(symbolic_tokens[8].str,TokenTypeStr[symbolic_tokens[8].type]);//;
-
+            tmp="";
             continue;
         }
+
         if (isAssign && tmp.find(';')!=string::npos){
-            validateid(tmp.erase(tmp.size()-1));
+            CheckIdOrNum(tmp.erase(tmp.size() - 1));
+            WriteOnFile(symbolic_tokens[8].str, TokenTypeStr[symbolic_tokens[8].type]);//;
             tmp="";
             isAssign= false;
-
-            //semi column
-            writeonfile(symbolic_tokens[8].str,TokenTypeStr[symbolic_tokens[8].type]);//;
             continue;
         }
+
         if (tmp=="end")
         {
-            writeonfile(tmp,TokenTypeStr[3]);
-
+            WriteOnFile(reserved_words[3].str, TokenTypeStr[reserved_words[3].type]);//end
             tmp="";
             continue;
         }
-        //error
-//        if (i>0 && str[i-1]==' ' && str[i+1]==' ' && error(str[i],str[i+1])){
-//
-//        }
+
+        if (tmp=="else"){
+            WriteOnFile(reserved_words[2].str, TokenTypeStr[reserved_words[2].type]);//end
+            tmp="";
+            continue;
+        }
     }
-    cout<<str;
 }
 
 int main(){
-    while (inFile.GetNewLine()){
-        analysis(inFile.GetNextTokenStr());
-    }
-    writeonfile(TokenTypeStr[23],TokenTypeStr[ENDFILE]);//EndOfFile
+    while (compiler.in_file.GetNewLine())
+        ConstructTokens(compiler.in_file.GetNextTokenStr());
+    WriteOnFile(TokenTypeStr[23], TokenTypeStr[ENDFILE]);//EndOfFile
     return 0;
 }
