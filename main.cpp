@@ -340,9 +340,9 @@ void ConstructTokens(string str)
         //check comment found
         if (str[i]=='{'){
             WriteOnFile(symbolic_tokens[11].str, TokenTypeStr[symbolic_tokens[11].type]);//{
-            compiler.in_file.SkipUpto("}");
-
-            WriteOnFile(symbolic_tokens[12].str, TokenTypeStr[symbolic_tokens[12].type]);//}
+            if(compiler.in_file.SkipUpto("}")){
+                WriteOnFile(symbolic_tokens[12].str, TokenTypeStr[symbolic_tokens[12].type]);//}
+            }
             tmp="";
             break;
         }
