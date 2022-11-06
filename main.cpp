@@ -244,7 +244,7 @@ void CheckIdOrNum(const string& str){//Num ID
 
     let:
     while (!d.empty()){
-        if((d.front()=='>' || d.front()=='<' || d.front()=='=' || d.front()=='^' || d.front()=='/' || d.front()=='*'|| d.front()=='-'|| d.front()=='+')){
+        if((d.front()=='<' || d.front()=='=' || d.front()=='^' || d.front()=='/' || d.front()=='*'|| d.front()=='-'|| d.front()=='+')){
             if (!letter.empty()){
                 WriteOnFile(letter, TokenTypeStr[ID]);//ID
                 letter="";
@@ -274,7 +274,7 @@ void CheckIdOrNum(const string& str){//Num ID
     }
     num:
     while (!d.empty()){
-        if((d.front()=='>' || d.front()=='<' || d.front()=='=' || d.front()=='^' || d.front()=='/' || d.front()=='*'|| d.front()=='-'|| d.front()=='+')){
+        if((d.front()=='<' || d.front()=='=' || d.front()=='^' || d.front()=='/' || d.front()=='*'|| d.front()=='-'|| d.front()=='+')){
             if (!number.empty()){
                 WriteOnFile(number, TokenTypeStr[NUM]);//number
                 number="";
@@ -306,7 +306,7 @@ void CheckIdOrNum(const string& str){//Num ID
 }
 
 bool error(char c){
-    if ((c!=' ' && (!IsLetterOrUnderscore(c) && !IsDigit(c))) && ( c!='{' && c!='}' &&c!='(' && c!=')'  && c!='>' && c!=';' && c!='<' && c!='=' && c!='^' && c!='/' && c!='*'&& c!='-'&& c!='+')){
+    if ((c!=' ' && (!IsLetterOrUnderscore(c) && !IsDigit(c))) && ( c!='{' && c!='}' &&c!='(' && c!=')' && c!=';' && c!='<' && c!='=' && c!='^' && c!='/' && c!='*'&& c!='-'&& c!='+')){
         string s;s+=c;
         WriteOnFile(s, TokenTypeStr[ERROR]);//error
         return true;
@@ -328,8 +328,9 @@ void ConstructTokens(string str)
             if ((str[i]==':' && str[i+1]=='=')){
                 //do nothing
             }
-            else{
-                if (error(str[i])){
+            else{//s&
+                if (error(str[i]))
+                {
                     continue;
                 }
             }
@@ -476,6 +477,16 @@ void ConstructTokens(string str)
 
         if (tmp=="else"){
             WriteOnFile(reserved_words[2].str, TokenTypeStr[reserved_words[2].type]);//end
+            tmp="";
+            continue;
+        }
+        //check assignments
+        deque<char> d;d.push_back(str[i]);
+        checkAssignmentOperator(d);
+        if (d.empty())tmp.erase(tmp.size()-1);
+
+        if (!tmp.empty() && str[i]==' '){
+            CheckIdOrNum(tmp);
             tmp="";
             continue;
         }
